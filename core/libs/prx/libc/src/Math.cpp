@@ -112,9 +112,13 @@ int APS5_VABI __signbitf_nid_postfix(float x) { return std::signbit(x) ? 1 : 0; 
 
 float APS5_VABI __powisf2_nid_postfix(float base, int exponent) {
     const bool reciprocal = exponent < 0;
-    auto remaining = reciprocal ? -static_cast<long long>(exponent) : static_cast<long long>(exponent);
     float result = 1.0f;
-    for (; remaining != 0; remaining >>= 1, base *= base) if (remaining & 1) result *= base;
+    while (true) {
+        if (exponent & 1) result *= base;
+        exponent /= 2;
+        if (exponent == 0) break;
+        base *= base;
+    }
     return reciprocal ? 1.0f / result : result;
 }
 
