@@ -259,12 +259,14 @@ namespace {
 
 thread_local PendingModuleArgs pendingModuleArgs;
 thread_local int pendingModuleInitResult = 0;
+constexpr unsigned char kNoModuleArgs[0x10] = {};
 
 }
 
 extern "C" {
 
 const void* __aps5_get_pending_module_args_nid_no_patch() {
+    if (pendingModuleArgs.argp == nullptr) pendingModuleArgs.argp = kNoModuleArgs;
     return &pendingModuleArgs;
 }
 
